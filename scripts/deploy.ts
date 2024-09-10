@@ -10,6 +10,8 @@ import {
 import qs from "qs";
 import qrcode from "qrcode-terminal";
 
+import dotenv from "dotenv"
+dotenv.config();
 
 async function deployScript() {
   console.log(
@@ -37,12 +39,14 @@ async function deployScript() {
   console.log(
     `The address of the contract is following: ${address.toString()}`
   );
-  console.log(`Please scan the QR code below to deploy the contract:`);
+  console.log(`Please scan the QR code below to deploy the contract to ${
+    process.env.TESTNET ? "tesnet" : "mainnet"
+  }:`);
 
   let link =
     `ton://transfer/` +
     address.toString({
-      testOnly: true,
+      testOnly: process.env.TESTNET ? true : false,
     }) +
     "?" +
     qs.stringify({

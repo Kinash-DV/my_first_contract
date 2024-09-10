@@ -5,6 +5,9 @@ import { TonClient4 } from "@ton/ton";
 import qs from "qs";
 import qrcode from "qrcode-terminal";
 
+import dotenv from "dotenv"
+dotenv.config();
+
 async function onchainTestScript() {
   const codeCell = Cell.fromBoc(Buffer.from(hex, "hex"))[0];
   const dataCell = new Cell();
@@ -15,7 +18,7 @@ async function onchainTestScript() {
   });
 
   const endpoint = await getHttpV4Endpoint({
-    network: "testnet",
+    network: process.env.TESTNET ? "testnet": "mainnet",
   });
   const client4 = new TonClient4({ endpoint });
 
@@ -30,13 +33,17 @@ async function onchainTestScript() {
   let link =
     `ton://transfer/` +
     address.toString({
-      testOnly: true,
+      testOnly: process.env.TESTNET ? true : false,
     }) +
     "?" +
     qs.stringify({
       text: "Simple test transaction",
       amount: toNano(1).toString(10),
     });
+
+  console.log(`Please scan the QR code below to test in ${
+    process.env.TESTNET ? "tesnet" : "mainnet"
+  }:`);
 
   qrcode.generate(link, { small: true }, (code) => {
     console.log(code);
@@ -69,7 +76,7 @@ async function onchainTestScript() {
     ) {
       console.log(
         "New recent sender found: " +
-          most_recent_sender.toString({ testOnly: true })
+          most_recent_sender.toString({ testOnly: process.env.TESTNET ? true : false })
       );
       recent_sender_archive = most_recent_sender;
     }
