@@ -122,4 +122,12 @@ export class MainContract implements Contract {
       body: msg_body,
     });
   }
+
+  async sendDeploy(provider: ContractProvider, via: Sender, value: bigint) {
+    await provider.internal(via, {
+      value,
+      sendMode: SendMode.PAY_GAS_SEPARATELY,
+      body: beginCell().endCell(),
+    });
+}
 }

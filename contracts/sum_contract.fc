@@ -10,7 +10,14 @@
 	slice old_address = ds~load_msg_addr();
 	int old_number32 = ds~load_uint(32);
 
-	set_data(begin_cell().store_slice(sender_address).store_uint(number32+old_number32).end_cell());
+	int sum = number32 + old_number32;
+
+	set_data(
+		begin_cell()
+		.store_slice(sender_address)
+		.store_uint(sum, 32)
+		.end_cell()
+	);
 }
 
 (int) get_sum() method_id {
