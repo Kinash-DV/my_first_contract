@@ -64,6 +64,22 @@ int balance() method_id {
         return();
     }
 
+    if (op == 4) {
+        int msg_mode = 128 + 32; 
+        ;; 128 - Carry all the remaining balance of the current smart contract instead of the value originally indicated in the message
+        ;; 32  - Current account must be destroyed if its resulting balance is zero (often used with Mode 128)
+
+        var msg = begin_cell()
+            .store_uint(0x18, 6)
+            .store_slice(sender_address)
+            .store_coins(0)
+            .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1);
+
+        send_raw_message(msg.end_cell(), msg_mode);
+
+        return();
+    }
+
   throw(777);
 }
 
