@@ -34,7 +34,8 @@ int balance() method_id {
   var (counter_value, recent_sender, owner_address) = load_data();
 	
   if (op == 1) {
-    save_data(counter_value + 1, sender_address, owner_address);
+    int number32 = in_msg_body~load_uint(32);
+    save_data(counter_value + number32, sender_address, owner_address);
     return();
   }
 

@@ -144,4 +144,36 @@ describe("main.fc contract tests", () => {
       exitCode: 104,
     });
   });
+
+  it("should get the correct sum of numbers", async () => {
+    const senderWallet = await blockchain.treasury("sender");
+
+    var sentMessageResult = await myContract.sendIncrement(
+      senderWallet.getSender(),
+      toNano("0.001"),
+      2
+    );
+
+    expect(sentMessageResult.transactions).toHaveTransaction({
+      from: senderWallet.address,
+      to: myContract.address,
+      success: true,
+    });
+
+    sentMessageResult = await myContract.sendIncrement(
+      senderWallet.getSender(),
+      toNano("0.001"),
+      3
+    );
+
+    expect(sentMessageResult.transactions).toHaveTransaction({
+      from: senderWallet.address,
+      to: myContract.address,
+      success: true,
+    });
+
+    const data = await myContract.getData();
+    expect(data.number).toEqual(5);
+  });
+
 });
